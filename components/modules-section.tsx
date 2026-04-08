@@ -102,7 +102,7 @@ export function ModulesSection() {
         {/* Nota de preço */}
         <div className="text-center mt-10">
           <p className="text-sm text-slate-500">
-            Todos os módulos inclusos em qualquer plano · <a href="#pricing" className="text-blue-600 font-medium hover:underline">Ver preços →</a>
+            Módulos de automação inclusos em qualquer plano · Gestão de NS disponível como add-on no Empresarial · <a href="#pricing" className="text-blue-600 font-medium hover:underline">Ver preços →</a>
           </p>
         </div>
       </div>
