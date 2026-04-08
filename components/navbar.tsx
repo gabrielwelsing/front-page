@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
-const HUB_URL = "https://www.plataforma.sup-ia.com" //
+const HUB_URL = "https://www.hub.sup-ia.com" //
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
