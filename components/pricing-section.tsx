@@ -3,11 +3,8 @@
 import { useState } from "react"
 import { Check, Sparkles } from "lucide-react"
 
-const WHATSAPP_NUMBER = "5511999999999" // TODO: trocar pelo número real
-
-function whatsappLink(plan: string) {
-  const msg = encodeURIComponent(`Olá! Tenho interesse no plano ${plan} da SUP-IA. Gostaria de saber mais.`)
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`
+function emailLink(subject: string) {
+  return `mailto:adm@sup-ia.com?subject=${encodeURIComponent(subject)}`
 }
 
 const NS_PRICE_MONTHLY = 40 // R$ por usuário/mês
@@ -20,7 +17,7 @@ function formatBRL(value: number): string {
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true)
   const [enterpriseUsers, setEnterpriseUsers] = useState("10")
-  const [withNS, setWithNS] = useState(false)
+  const [withNS, setWithNS] = useState(true)
 
   const individualMonthly = "217,90"
   const individualAnnual = "197,90"
@@ -137,9 +134,7 @@ export function PricingSection() {
             </ul>
 
             <a
-              href={whatsappLink("Individual " + (isAnnual ? "Anual" : "Mensal"))}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={emailLink(`Assinar Plano Individual ${isAnnual ? "Anual" : "Mensal"} — SUP-IA`)}
               className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300"
             >
               Assinar Individual
@@ -242,9 +237,11 @@ export function PricingSection() {
             </ul>
 
             <a
-              href={whatsappLink("Empresarial " + enterpriseUsers + " usuários")}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={emailLink(
+                isSobConsulta
+                  ? `Consulta Plano Empresarial ${enterpriseUsers} usuários — SUP-IA`
+                  : `Assinar Plano Empresarial ${enterpriseUsers} usuários ${isAnnual ? "Anual" : "Mensal"}${withNS ? " + Gestão de NS" : ""} — SUP-IA`
+              )}
               className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow"
             >
               {isSobConsulta ? "Falar com Consultor" : "Assinar Empresarial"}
