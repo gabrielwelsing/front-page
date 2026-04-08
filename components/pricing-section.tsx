@@ -10,9 +10,17 @@ function whatsappLink(plan: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`
 }
 
+const NS_PRICE_MONTHLY = 40 // R$ por usuário/mês
+const NS_DISCOUNT = 0.12
+
+function formatBRL(value: number): string {
+  return value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true)
   const [enterpriseUsers, setEnterpriseUsers] = useState("10")
+  const [withNS, setWithNS] = useState(false)
 
   const individualMonthly = "217,90"
   const individualAnnual = "197,90"
@@ -27,7 +35,26 @@ export function PricingSection() {
 
   const currentEnterprise = enterprisePrices[enterpriseUsers]
   const isSobConsulta = enterpriseUsers === "100+"
-  const entPriceDisplay = isAnnual ? currentEnterprise.annual : currentEnterprise.month
+
+  const nsUsers = isSobConsulta ? 0 : parseInt(enterpriseUsers)
+  const nsMonthlyAdd = nsUsers * NS_PRICE_MONTHLY
+  const nsAnnualAdd = nsUsers * NS_PRICE_MONTHLY * (1 - NS_DISCOUNT)
+
+  function addNS(base: string): string {
+    if (!withNS || isSobConsulta) return base
+    const baseNum = parseFloat(base.replace(/\./g, "").replace(",", "."))
+    const add = isAnnual ? nsAnnualAdd : nsMonthlyAdd
+    return formatBRL(baseNum + add)
+  }
+
+  function annualTotalWithNS(base: string): string {
+    if (!withNS || isSobConsulta) return base
+    const baseNum = parseFloat(base.replace(/\./g, "").replace(",", "."))
+    return formatBRL(baseNum + nsAnnualAdd * 12)
+  }
+
+  const entPriceDisplay = addNS(isAnnual ? currentEnterprise.annual : currentEnterprise.month)
+  const entAnnualTotal = annualTotalWithNS(currentEnterprise.annualTotal)
 
   const savingsPercent = "~12%"
 
@@ -131,6 +158,29 @@ export function PricingSection() {
               <p className="text-slate-500 text-sm">Escalável para Concessionárias e Terceirizadas.</p>
             </div>
 
+            {/* Toggle Gestão de NS */}
+            <div className="flex items-center justify-between bg-indigo-50 border border-indigo-200/60 rounded-xl px-4 py-3 mb-4">
+              <div>
+                <p className="text-sm font-semibold text-slate-800">+ Módulo Gestão de NS</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {isSobConsulta
+                    ? "Sob consulta"
+                    : isAnnual
+                    ? `+R$ ${formatBRL(nsAnnualAdd)}/mês por equipe (anual)`
+                    : `+R$ ${formatBRL(nsMonthlyAdd)}/mês por equipe`}
+                </p>
+              </div>
+              <button
+                onClick={() => setWithNS(!withNS)}
+                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${withNS ? "bg-indigo-600" : "bg-slate-300"}`}
+                role="switch"
+                aria-checked={withNS}
+                aria-label="Adicionar módulo Gestão de NS"
+              >
+                <span className={`inline-block h-5 w-5 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${withNS ? "translate-x-8" : "translate-x-1"}`} />
+              </button>
+            </div>
+
             <div className="mb-4">
               <label className="block text-sm font-semibold text-slate-700 mb-2">Tamanho da Equipe</label>
               <div className="flex gap-2">
@@ -163,7 +213,7 @@ export function PricingSection() {
             </div>
             {isAnnual && !isSobConsulta && (
               <p className="text-xs text-slate-500 mb-6">
-                Faturado R$ {currentEnterprise.annualTotal} anualmente.
+                Faturado R$ {entAnnualTotal} anualmente.
               </p>
             )}
             {(!isAnnual || isSobConsulta) && <div className="mb-6" />}
