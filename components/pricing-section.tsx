@@ -255,7 +255,7 @@ export function PricingSection() {
         {/* Garantia */}
         <div className="text-center mt-12">
           <p className="text-sm text-slate-500">
-            ✅ Fácil adaptação com a sua empresa · Gestão personalizável · Programa facilmente personalizável ao seu fluxo
+            ✅ Fácil adaptação à sua empresa · Plataforma flexível · Configure do seu jeito · Cresce junto com seu time
           </p>
         </div>
       </div>
