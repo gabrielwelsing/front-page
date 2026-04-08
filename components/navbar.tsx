@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
-const HUB_URL = "https://hub-proeng.vercel.app" // TODO: trocar pela URL definitiva do hub
+const HUB_URL = "https://www.plataforma.sup-ia.com" // TODO: trocar pela URL definitiva do hub
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
