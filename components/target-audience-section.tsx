@@ -40,7 +40,7 @@ export function TargetAudienceSection() {
             Para Quem É a SUP-IA?
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Desenvolvido especificamente para profissionais e empresas do setor elétrico
+            Desenvolvido para profissionais e empresas de gestão e do setor elétrico
           </p>
         </div>
 
