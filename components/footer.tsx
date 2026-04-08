@@ -41,11 +41,6 @@ export function Footer() {
                   Preços
                 </a>
               </li>
-              <li>
-                <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20um%20teste%20da%20SUP-IA." target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">
-                  Agendar Teste
-                </a>
-              </li>
             </ul>
           </div>
 
