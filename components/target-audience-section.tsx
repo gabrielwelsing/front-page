@@ -1,4 +1,4 @@
-import { Building2, Lightbulb, Factory } from "lucide-react"
+import { Building2, Lightbulb, Factory, LayoutDashboard } from "lucide-react"
 
 const audiences = [
   {
@@ -21,6 +21,13 @@ const audiences = [
     description: "Distribuidoras que buscam otimizar processos internos",
     color: "bg-amber-50",
     iconColor: "text-amber-600"
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Empresas de Gestão de Projetos",
+    description: "Gerencie projetos com Kanban integrado a aplicativos de mensagem. Gráfico de Gantt em breve.",
+    color: "bg-violet-50",
+    iconColor: "text-violet-600"
   }
 ]
 
@@ -37,7 +44,7 @@ export function TargetAudienceSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {audiences.map((audience, index) => (
             <div
               key={index}

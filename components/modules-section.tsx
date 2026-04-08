@@ -1,6 +1,6 @@
 "use client"
 
-import { Globe, FileText, Image as ImageIcon, Hash, ClipboardList } from "lucide-react"
+import { Globe, FileText, Image as ImageIcon, ScanLine, ClipboardList, BookOpen } from "lucide-react"
 
 const modules = [
   {
@@ -13,9 +13,9 @@ const modules = [
     tag: "Topografia"
   },
   {
-    icon: Hash,
+    icon: ScanLine,
     name: "📊 Contagem de Croqui",
-    description: "Carregue o PDF do croqui, clique nos postes e obtenha a contagem total automaticamente. Elimina recontagens manuais.",
+    description: "Carregue o PDF do croqui, clique nos postes e obtenha a contagem total automaticamente. Elimina recontagens manuais. Mais utilizado pelo levantamento de campo.",
     color: "bg-amber-50",
     iconColor: "text-amber-600",
     borderColor: "border-amber-200/60",
@@ -24,7 +24,7 @@ const modules = [
   {
     icon: FileText,
     name: "🔢 Numeração de Postes",
-    description: "Numere postes sequencialmente direto no PDF com um clique. Exporta planilha pronta para aprovação.",
+    description: "Numere postes sequencialmente direto no PDF com um clique. Exporta planilha pronta para aprovação. Mais utilizado pelo projeto.",
     color: "bg-blue-50",
     iconColor: "text-blue-600",
     borderColor: "border-blue-200/60",
@@ -47,6 +47,15 @@ const modules = [
     iconColor: "text-indigo-600",
     borderColor: "border-indigo-200/60",
     tag: "Gestão"
+  },
+  {
+    icon: BookOpen,
+    name: "📓 Automação de Caderneta",
+    description: "Monta e lança a caderneta topográfica automaticamente. Integra os dados de campo, gera a caderneta completa e efetua o lançamento sem intervenção manual.",
+    color: "bg-violet-50",
+    iconColor: "text-violet-600",
+    borderColor: "border-violet-200/60",
+    tag: "Topografia"
   }
 ]
 

@@ -205,7 +205,7 @@ export function PricingSection() {
         {/* Garantia */}
         <div className="text-center mt-12">
           <p className="text-sm text-slate-500">
-            ✅ Piloto gratuito disponível · Sem fidelidade · Cancele quando quiser
+            ✅ Fácil adaptação com a sua empresa · Gestão personalizável · Programa facilmente personalizável ao seu fluxo
           </p>
         </div>
       </div>

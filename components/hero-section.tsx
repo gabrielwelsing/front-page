@@ -35,7 +35,7 @@ export function HeroSection() {
 
           {/* Subtitle */}
           <p className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed text-pretty">
-            Automação 100% online para projetos de redes elétricas de média e baixa tensão.
+            Inteligência Aliada à Energia. Automação 100% online para projetos de redes elétricas de média e baixa tensão. Ferramentas que apoiam a gestão e facilitam a produtividade.
           </p>
 
           {/* CTA Buttons */}
@@ -56,7 +56,7 @@ export function HeroSection() {
               className="px-8 py-6 text-base rounded-xl border-slate-300 hover:bg-slate-50 text-slate-700"
               asChild
             >
-              <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20um%20teste%20da%20SUP-IA." target="_blank" rel="noopener noreferrer">
+              <a href="mailto:adm@sup-ia.com?subject=Agendar%20Teste%20SUP-IA" target="_blank" rel="noopener noreferrer">
                 <Play className="w-4 h-4 mr-2" />
                 Agendar Teste
               </a>

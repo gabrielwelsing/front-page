@@ -54,18 +54,18 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Contato</h4>
             <ul className="space-y-3">
               <li>
-                <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Preciso%20de%20suporte%20da%20SUP-IA." target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">
+                <a href="mailto:adm@sup-ia.com?subject=Suporte%20SUP-IA" className="text-slate-400 hover:text-white transition-colors text-sm">
                   Suporte
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Tenho%20interesse%20nos%20planos%20da%20SUP-IA." target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">
+                <a href="mailto:adm@sup-ia.com?subject=Interesse%20nos%20Planos%20SUP-IA" className="text-slate-400 hover:text-white transition-colors text-sm">
                   Vendas
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">
-                  Parcerias
+                <a href="mailto:adm@sup-ia.com?subject=Agendar%20Teste%20SUP-IA" className="text-slate-400 hover:text-white transition-colors text-sm">
+                  Agendar Teste
                 </a>
               </li>
             </ul>
@@ -78,10 +78,10 @@ export function Footer() {
             © {new Date().getFullYear()} SUP-IA. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm">
+            <a href="/termos" className="text-slate-500 hover:text-white transition-colors text-sm">
               Termos de Uso
             </a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm">
+            <a href="/privacidade" className="text-slate-500 hover:text-white transition-colors text-sm">
               Privacidade
             </a>
           </div>
