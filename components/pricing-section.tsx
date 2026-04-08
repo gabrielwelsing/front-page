@@ -132,7 +132,7 @@ export function PricingSection() {
               </li>
               <li className="flex items-start gap-3 text-slate-700">
                 <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                <span>Suporte via Email Brasileiro</span>
+                <span>Suporte via E-mail em Português</span>
               </li>
             </ul>
 
@@ -155,7 +155,7 @@ export function PricingSection() {
 
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Empresarial</h3>
-              <p className="text-slate-500 text-sm">Escalável para Concessionárias e Terceirizadas.</p>
+              <p className="text-slate-500 text-sm">Escalável para Concessionárias, Terceirizadas e Empresas de Gestão.</p>
             </div>
 
             {/* Toggle Gestão de NS */}
