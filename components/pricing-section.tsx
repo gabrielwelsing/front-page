@@ -79,25 +79,29 @@ export function PricingSection() {
 
           {/* Toggle Mensal/Anual */}
           <div className="flex items-center justify-center mt-8 gap-3">
-            <span className={`text-sm font-medium ${!isAnnual ? 'text-slate-900' : 'text-slate-500'}`}>Mensal</span>
+            <span className={`text-sm font-medium transition-colors ${!isAnnual ? 'text-slate-900' : 'text-slate-400'}`}>Mensal</span>
             <button
               onClick={() => setIsAnnual(!isAnnual)}
-              className="relative inline-flex h-7 w-14 items-center rounded-full bg-blue-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              className={`relative inline-flex h-7 w-14 items-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                isAnnual
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 focus-visible:ring-amber-400 shadow-md shadow-amber-200/50'
+                  : 'bg-blue-600 focus-visible:ring-blue-500'
+              }`}
               role="switch"
               aria-checked={isAnnual}
               aria-label="Alternar entre plano mensal e anual"
             >
               <span className={`inline-block h-5 w-5 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${isAnnual ? 'translate-x-8' : 'translate-x-1'}`} />
             </button>
-            <span className={`text-sm font-medium ${isAnnual ? 'text-slate-900' : 'text-slate-500'}`}>
-              Anual <span className="text-green-600 font-bold text-xs bg-green-100 px-2 py-0.5 rounded-full ml-1">Economize {savingsPercent}</span>
+            <span className={`text-sm font-medium transition-colors ${isAnnual ? 'text-amber-700' : 'text-slate-400'}`}>
+              Anual <span className={`font-bold text-xs px-2 py-0.5 rounded-full ml-1 transition-all duration-300 ${isAnnual ? 'text-amber-700 bg-amber-100 border border-amber-200' : 'text-green-600 bg-green-100'}`}>Economize {savingsPercent}</span>
             </span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
           {/* Plano Individual */}
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 relative group">
+          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 relative group flex flex-col">
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Individual</h3>
               <p className="text-slate-500 text-sm">Para profissionais autônomos e projetistas.</p>
@@ -117,7 +121,7 @@ export function PricingSection() {
             )}
             {!isAnnual && <div className="mb-6" />}
 
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-4 mb-8 flex-1">
               <li className="flex items-start gap-3 text-slate-700">
                 <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                 <span>1 Licença de usuário</span>
@@ -148,14 +152,14 @@ export function PricingSection() {
                   isAnnual ? "Anual" : "Mensal"
                 )
               }
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300 cursor-pointer"
+              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300 cursor-pointer mt-auto"
             >
               Assinar Individual
             </button>
           </div>
 
           {/* Plano Empresarial */}
-          <div className="bg-white rounded-2xl p-8 border-2 border-blue-600 shadow-lg relative transform md:-translate-y-4 group">
+          <div className="bg-white rounded-2xl p-8 border-2 border-blue-600 shadow-lg relative group flex flex-col">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-1.5">
               <Sparkles className="w-3 h-3" />
               Recomendado
@@ -226,7 +230,7 @@ export function PricingSection() {
             )}
             {(!isAnnual || isSobConsulta) && <div className="mb-6" />}
 
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-4 mb-8 flex-1">
               <li className="flex items-start gap-3 text-slate-700">
                 <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <span className="font-semibold">Painel de Gestão de Usuários</span>
@@ -261,7 +265,7 @@ export function PricingSection() {
                   isAnnual ? "Anual" : "Mensal"
                 )
               }}
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow cursor-pointer"
+              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow cursor-pointer mt-auto"
             >
               {isSobConsulta ? "Falar com Consultor" : "Assinar Empresarial"}
             </button>

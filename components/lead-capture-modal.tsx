@@ -157,6 +157,12 @@ export function LeadCaptureModal({
     setErrors({})
   }
 
+  // The display name for NF: for PF use the name from Step 1
+  function getNfName(): string {
+    if (tipoPessoa === "pf") return nome.trim()
+    return razaoSocial.trim()
+  }
+
   // ── Step 1 validation ───────────────────────────────────────────────────
 
   function validateStep1(): boolean {
@@ -185,7 +191,7 @@ export function LeadCaptureModal({
       if (!razaoSocial.trim()) newErrors.razaoSocial = "Informe a Razão Social"
       if (!isValidCNPJ(documento)) newErrors.documento = "Informe um CNPJ válido"
     } else {
-      if (!razaoSocial.trim()) newErrors.razaoSocial = "Informe seu nome completo"
+      // PF: name comes from Step 1, only validate CPF
       if (!isValidCPF(documento)) newErrors.documento = "Informe um CPF válido"
     }
 
@@ -199,18 +205,60 @@ export function LeadCaptureModal({
     return Object.keys(newErrors).length === 0
   }
 
+  // ── Contract PDF generation ─────────────────────────────────────────────
+
+  async function generateContract(endereco: string) {
+    try {
+      const nfName = getNfName()
+
+      const response = await fetch("/api/gerar-contrato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipoPessoa,
+          razaoSocial: nfName,
+          documento,
+          endereco,
+          telefone: whatsapp,
+          plano: planName,
+          ciclo: planCycle,
+          valor: planPrice,
+          numUsuarios: 1,
+        }),
+      })
+
+      if (!response.ok) return
+
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `Contrato_SaaS_SUP-IA_${nfName.replace(/\s+/g, "_").slice(0, 30)}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    } catch {
+      // silent fail — contract is a bonus, email still goes through
+    }
+  }
+
   // ── Submit ──────────────────────────────────────────────────────────────
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validateStep2()) return
 
     setEnviando(true)
 
     const greeting = getGreeting()
+    const nfName = getNfName()
     const endereco = `${rua}, ${numero}${complemento ? ` - ${complemento}` : ""}, ${bairro}, ${cidade}/${uf} — CEP ${cep}`
     const docLabel = tipoPessoa === "pj" ? "CNPJ" : "CPF"
     const nomeLabel = tipoPessoa === "pj" ? "Razão Social" : "Nome Completo (NF)"
+
+    // Generate contract PDF in background
+    generateContract(endereco)
 
     const subject = encodeURIComponent(
       `Nova Solicitação de Assinatura — ${planName} (${planCycle})`
@@ -235,7 +283,7 @@ export function LeadCaptureModal({
         `  DADOS PARA NOTA FISCAL`,
         `══════════════════════════════════════`,
         `Tipo: Pessoa ${tipoPessoa === "pj" ? "Jurídica" : "Física"}`,
-        `${nomeLabel}: ${razaoSocial.trim()}`,
+        `${nomeLabel}: ${nfName}`,
         `${docLabel}: ${documento}`,
         `Endereço: ${endereco}`,
         ``,
@@ -477,26 +525,35 @@ export function LeadCaptureModal({
                 </button>
               </div>
 
-              {/* Razão Social / Nome Completo */}
-              <div className="space-y-1.5">
-                <Label htmlFor="lead-razao">
-                  {tipoPessoa === "pj" ? "Razão Social" : "Nome Completo"}
-                </Label>
-                <Input
-                  id="lead-razao"
-                  placeholder={
-                    tipoPessoa === "pj"
-                      ? "Nome registrado da empresa"
-                      : "Seu nome completo conforme documento"
-                  }
-                  value={razaoSocial}
-                  onChange={(e) => setRazaoSocial(e.target.value)}
-                  aria-invalid={!!errors.razaoSocial}
-                />
-                {errors.razaoSocial && (
-                  <p className="text-xs text-red-500">{errors.razaoSocial}</p>
-                )}
-              </div>
+              {/* Razão Social — only for PJ (PF uses name from step 1) */}
+              {tipoPessoa === "pj" && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="lead-razao">Razão Social</Label>
+                  <Input
+                    id="lead-razao"
+                    placeholder="Nome registrado da empresa"
+                    value={razaoSocial}
+                    onChange={(e) => setRazaoSocial(e.target.value)}
+                    aria-invalid={!!errors.razaoSocial}
+                  />
+                  {errors.razaoSocial && (
+                    <p className="text-xs text-red-500">{errors.razaoSocial}</p>
+                  )}
+                </div>
+              )}
+
+              {/* PF: Show the name from step 1 as readonly confirmation */}
+              {tipoPessoa === "pf" && (
+                <div className="space-y-1.5">
+                  <Label className="text-slate-500">Nome para NF</Label>
+                  <div className="h-9 flex items-center px-3 rounded-md border border-slate-200 bg-slate-50 text-sm text-slate-700">
+                    {nome.trim() || "—"}
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Conforme informado na etapa anterior.
+                  </p>
+                </div>
+              )}
 
               {/* CNPJ or CPF */}
               <div className="space-y-1.5">
