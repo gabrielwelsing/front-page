@@ -2,10 +2,8 @@
 
 import { useState } from "react"
 import { Check, Sparkles } from "lucide-react"
+import { LeadCaptureModal } from "@/components/lead-capture-modal"
 
-function emailLink(subject: string) {
-  return `mailto:adm@sup-ia.com?subject=${encodeURIComponent(subject)}`
-}
 
 const NS_PRICE_MONTHLY = 40 // R$ por usuário/mês
 const NS_DISCOUNT = 0.12
@@ -18,6 +16,15 @@ export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true)
   const [enterpriseUsers, setEnterpriseUsers] = useState("10")
   const [withNS, setWithNS] = useState(true)
+
+  // Lead Capture Modal state
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalPlan, setModalPlan] = useState({ name: "", price: "", cycle: "" })
+
+  function openLeadModal(name: string, price: string, cycle: string) {
+    setModalPlan({ name, price, cycle })
+    setModalOpen(true)
+  }
 
   const individualMonthly = "217,90"
   const individualAnnual = "197,90"
@@ -133,12 +140,18 @@ export function PricingSection() {
               </li>
             </ul>
 
-            <a
-              href={emailLink(`Assinar Plano Individual ${isAnnual ? "Anual" : "Mensal"} — SUP-IA`)}
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300"
+            <button
+              onClick={() =>
+                openLeadModal(
+                  "Individual",
+                  `R$ ${isAnnual ? individualAnnual : individualMonthly}/mês`,
+                  isAnnual ? "Anual" : "Mensal"
+                )
+              }
+              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300 cursor-pointer"
             >
               Assinar Individual
-            </a>
+            </button>
           </div>
 
           {/* Plano Empresarial */}
@@ -236,16 +249,22 @@ export function PricingSection() {
               </li>
             </ul>
 
-            <a
-              href={emailLink(
-                isSobConsulta
-                  ? `Consulta Plano Empresarial ${enterpriseUsers} usuários — SUP-IA`
-                  : `Assinar Plano Empresarial ${enterpriseUsers} usuários ${isAnnual ? "Anual" : "Mensal"}${withNS ? " + Gestão de NS" : ""} — SUP-IA`
-              )}
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow"
+            <button
+              onClick={() => {
+                const planLabel = `Empresarial ${enterpriseUsers} usuários${withNS ? " + Gestão de NS" : ""}`
+                const priceLabel = isSobConsulta
+                  ? "Sob Consulta"
+                  : `R$ ${entPriceDisplay}/mês`
+                openLeadModal(
+                  planLabel,
+                  priceLabel,
+                  isAnnual ? "Anual" : "Mensal"
+                )
+              }}
+              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow cursor-pointer"
             >
               {isSobConsulta ? "Falar com Consultor" : "Assinar Empresarial"}
-            </a>
+            </button>
           </div>
         </div>
 
@@ -255,6 +274,15 @@ export function PricingSection() {
             ✅ Fácil adaptação à sua empresa · Plataforma flexível · Configure do seu jeito · Cresce junto com seu time
           </p>
         </div>
+
+        {/* Lead Capture Modal */}
+        <LeadCaptureModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          planName={modalPlan.name}
+          planPrice={modalPlan.price}
+          planCycle={modalPlan.cycle}
+        />
       </div>
     </section>
   )
