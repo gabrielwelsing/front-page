@@ -74,7 +74,7 @@ export function PricingSection() {
             Planos e Preços
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">
-            Escolha o plano ideal para alavancar a engenharia da sua empresa.
+            Escolha o plano ideal para alavancar a produtividade da sua empresa.
           </p>
 
           {/* Toggle Mensal/Anual */}
