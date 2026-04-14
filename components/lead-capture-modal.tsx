@@ -205,44 +205,6 @@ export function LeadCaptureModal({
     return Object.keys(newErrors).length === 0
   }
 
-  // ── Contract PDF generation ─────────────────────────────────────────────
-
-  async function generateContract(endereco: string) {
-    try {
-      const nfName = getNfName()
-
-      const response = await fetch("/api/gerar-contrato", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tipoPessoa,
-          razaoSocial: nfName,
-          documento,
-          endereco,
-          telefone: whatsapp,
-          plano: planName,
-          ciclo: planCycle,
-          valor: planPrice,
-          numUsuarios: 1,
-        }),
-      })
-
-      if (!response.ok) return
-
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `Contrato_SaaS_SUP-IA_${nfName.replace(/\s+/g, "_").slice(0, 30)}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
-    } catch {
-      // silent fail — contract is a bonus, email still goes through
-    }
-  }
-
   // ── Submit ──────────────────────────────────────────────────────────────
 
   async function handleSubmit(e: React.FormEvent) {
@@ -256,9 +218,6 @@ export function LeadCaptureModal({
     const endereco = `${rua}, ${numero}${complemento ? ` - ${complemento}` : ""}, ${bairro}, ${cidade}/${uf} — CEP ${cep}`
     const docLabel = tipoPessoa === "pj" ? "CNPJ" : "CPF"
     const nomeLabel = tipoPessoa === "pj" ? "Razão Social" : "Nome Completo (NF)"
-
-    // Generate contract PDF in background
-    generateContract(endereco)
 
     const subject = encodeURIComponent(
       `Nova Solicitação de Assinatura — ${planName} (${planCycle})`
