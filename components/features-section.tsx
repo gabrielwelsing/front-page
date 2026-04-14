@@ -1,4 +1,5 @@
 import { Cloud, Shield, Download, Link, Database, Globe } from "lucide-react"
+import { AnimateIn } from "@/components/animate-in"
 
 const features = [
   {
@@ -65,9 +66,9 @@ export function FeaturesSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
+            <AnimateIn key={index} delay={index * 80}>
             <div
-              key={index}
-              className="group bg-card rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md hover:border-slate-300/50 transition-all duration-300"
+              className="group bg-card rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md hover:border-slate-300/50 transition-all duration-300 h-full"
             >
               <div className={`w-12 h-12 ${feature.color} rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                 <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
@@ -79,6 +80,7 @@ export function FeaturesSection() {
                 {feature.description}
               </p>
             </div>
+            </AnimateIn>
           ))}
         </div>
       </div>

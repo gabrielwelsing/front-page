@@ -21,7 +21,7 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/70 border-b border-slate-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
             <a href="#" className="block">
@@ -29,8 +29,8 @@ export function Navbar() {
                 src="/logo-supia-crop.png"
                 alt="SUP-IA Logo"
                 width={160}
-                height={52}
-                style={{ width: 'auto', height: '52px' }}
+                height={44}
+                className="h-11 w-auto"
                 priority
               />
             </a>

@@ -1,6 +1,7 @@
 "use client"
 
 import { Globe, FileText, Image as ImageIcon, ScanLine, ClipboardList, BookOpen } from "lucide-react"
+import { AnimateIn } from "@/components/animate-in"
 
 const modules = [
   {
@@ -75,9 +76,9 @@ export function ModulesSection() {
         {/* Grid: 3 colunas no desktop, 2 no tablet, 1 no mobile */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {modules.map((module, index) => (
+            <AnimateIn key={index} delay={index * 80}>
             <div
-              key={index}
-              className={`bg-white rounded-2xl p-7 border ${module.borderColor} shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group relative overflow-hidden`}
+              className={`bg-white rounded-2xl p-7 border ${module.borderColor} shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group relative overflow-hidden h-full`}
             >
               {/* Tag */}
               <span className={`absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider ${module.iconColor} ${module.color} px-2 py-0.5 rounded-full`}>
@@ -96,6 +97,7 @@ export function ModulesSection() {
                 </p>
               </div>
             </div>
+            </AnimateIn>
           ))}
         </div>
 

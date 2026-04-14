@@ -14,3 +14,11 @@ next.user-config.*
 node_modules
 .next/
 .DS_Store
+
+# Arquivos de mídia locais
+"fotos para compor o site/"
+fotos para compor o site/
+*.mp4
+*.xlsm
+*.xlsx
+*.zip

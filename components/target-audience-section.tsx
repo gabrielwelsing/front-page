@@ -1,4 +1,5 @@
 import { Building2, Lightbulb, Factory, LayoutDashboard } from "lucide-react"
+import { AnimateIn } from "@/components/animate-in"
 
 const audiences = [
   {
@@ -46,9 +47,9 @@ export function TargetAudienceSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {audiences.map((audience, index) => (
+            <AnimateIn key={index} delay={index * 100}>
             <div
-              key={index}
-              className="bg-card rounded-2xl p-8 border border-slate-200/50 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-card rounded-2xl p-8 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 h-full"
             >
               <div className={`w-14 h-14 ${audience.color} rounded-xl flex items-center justify-center mb-6`}>
                 <audience.icon className={`w-7 h-7 ${audience.iconColor}`} />
@@ -60,6 +61,7 @@ export function TargetAudienceSection() {
                 {audience.description}
               </p>
             </div>
+            </AnimateIn>
           ))}
         </div>
       </div>

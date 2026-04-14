@@ -101,7 +101,7 @@ export function PricingSection() {
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
           {/* Plano Individual */}
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 relative group flex flex-col">
+          <div className={`rounded-2xl p-8 border shadow-sm hover:shadow-md transition-all duration-500 relative group flex flex-col ${isAnnual ? "bg-amber-50/50 border-amber-300 shadow-amber-100/60" : "bg-white border-slate-200"}`}>
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Individual</h3>
               <p className="text-slate-500 text-sm">Para profissionais autônomos e projetistas.</p>
@@ -152,15 +152,15 @@ export function PricingSection() {
                   isAnnual ? "Anual" : "Mensal"
                 )
               }
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300 cursor-pointer mt-auto"
+              className={`block w-full py-3.5 px-4 rounded-xl font-bold transition-all duration-500 text-center cursor-pointer mt-auto ${isAnnual ? "text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 hover:border-amber-400" : "text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300"}`}
             >
               Assinar Individual
             </button>
           </div>
 
           {/* Plano Empresarial */}
-          <div className="bg-white rounded-2xl p-8 border-2 border-blue-600 shadow-lg relative group flex flex-col">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-1.5">
+          <div className={`rounded-2xl p-8 border-2 shadow-lg relative group flex flex-col transition-all duration-500 ${isAnnual ? "bg-amber-50/50 border-amber-400 shadow-amber-200/40" : "bg-white border-blue-600"}`}>
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-1.5 transition-all duration-500 ${isAnnual ? "bg-gradient-to-r from-amber-500 to-yellow-500 shadow-md shadow-amber-200/50" : "bg-blue-600"}`}>
               <Sparkles className="w-3 h-3" />
               Recomendado
             </div>
@@ -171,7 +171,7 @@ export function PricingSection() {
             </div>
 
             {/* Toggle Gestão de NS */}
-            <div className="flex items-center justify-between bg-indigo-50 border border-indigo-200/60 rounded-xl px-4 py-3 mb-4">
+            <div className={`flex items-center justify-between rounded-xl px-4 py-3 mb-4 transition-all duration-500 ${isAnnual ? "bg-amber-100/70 border border-amber-300/60" : "bg-indigo-50 border border-indigo-200/60"}`}>
               <div>
                 <p className="text-sm font-semibold text-slate-800">+ Módulo Gestão de NS</p>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -232,23 +232,23 @@ export function PricingSection() {
 
             <ul className="space-y-4 mb-8 flex-1">
               <li className="flex items-start gap-3 text-slate-700">
-                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Check className={`w-5 h-5 shrink-0 mt-0.5 transition-colors duration-500 ${isAnnual ? "text-amber-500" : "text-blue-600"}`} />
                 <span className="font-semibold">Painel de Gestão de Usuários</span>
               </li>
               <li className="flex items-start gap-3 text-slate-700">
-                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Check className={`w-5 h-5 shrink-0 mt-0.5 transition-colors duration-500 ${isAnnual ? "text-amber-500" : "text-blue-600"}`} />
                 <span>Todos os módulos inclusos</span>
               </li>
               <li className="flex items-start gap-3 text-slate-700">
-                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Check className={`w-5 h-5 shrink-0 mt-0.5 transition-colors duration-500 ${isAnnual ? "text-amber-500" : "text-blue-600"}`} />
                 <span>Relatórios consolidados da equipe</span>
               </li>
               <li className="flex items-start gap-3 text-slate-700">
-                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Check className={`w-5 h-5 shrink-0 mt-0.5 transition-colors duration-500 ${isAnnual ? "text-amber-500" : "text-blue-600"}`} />
                 <span>API e NS Única Compartilhada</span>
               </li>
               <li className="flex items-start gap-3 text-slate-700">
-                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Check className={`w-5 h-5 shrink-0 mt-0.5 transition-colors duration-500 ${isAnnual ? "text-amber-500" : "text-blue-600"}`} />
                 <span>Suporte Prioritário (WhatsApp)</span>
               </li>
             </ul>
@@ -265,7 +265,7 @@ export function PricingSection() {
                   isAnnual ? "Anual" : "Mensal"
                 )
               }}
-              className="block w-full py-3.5 px-4 rounded-xl font-bold transition-all text-center text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow cursor-pointer mt-auto"
+              className={`block w-full py-3.5 px-4 rounded-xl font-bold transition-all duration-500 text-center text-white shadow-sm hover:shadow cursor-pointer mt-auto ${isAnnual ? "bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 shadow-amber-200/50" : "bg-blue-600 hover:bg-blue-700"}`}
             >
               {isSobConsulta ? "Falar com Consultor" : "Assinar Empresarial"}
             </button>
