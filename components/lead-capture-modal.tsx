@@ -78,15 +78,6 @@ function isValidCEP(value: string): boolean {
   return value.replace(/\D/g, "").length === 8
 }
 
-// ── Greeting helper ───────────────────────────────────────────────────────────
-
-function getGreeting(): string {
-  const hour = new Date().getHours()
-  if (hour >= 5 && hour < 12) return "Bom dia"
-  if (hour >= 12 && hour < 18) return "Boa tarde"
-  return "Boa noite"
-}
-
 // ── UF options ────────────────────────────────────────────────────────────────
 
 const UF_OPTIONS = [
@@ -213,63 +204,39 @@ export function LeadCaptureModal({
 
     setEnviando(true)
 
-    const greeting = getGreeting()
     const nfName = getNfName()
     const endereco = `${rua}, ${numero}${complemento ? ` - ${complemento}` : ""}, ${bairro}, ${cidade}/${uf} — CEP ${cep}`
-    const docLabel = tipoPessoa === "pj" ? "CNPJ" : "CPF"
-    const nomeLabel = tipoPessoa === "pj" ? "Razão Social" : "Nome Completo (NF)"
 
-    const subject = encodeURIComponent(
-      `Nova Solicitação de Assinatura — ${planName} (${planCycle})`
-    )
-    const body = encodeURIComponent(
-      [
-        `${greeting}, ${nome.trim().split(" ")[0]}!`,
-        ``,
-        `Recebemos sua solicitação de assinatura da plataforma SUP-IA.`,
-        `Enviaremos o contrato para avaliação e assinatura assim que possível.`,
-        ``,
-        `Seguem os dados informados:`,
-        ``,
-        `══════════════════════════════════════`,
-        `  DADOS DE CONTATO`,
-        `══════════════════════════════════════`,
-        `Nome: ${nome.trim()}`,
-        `E-mail: ${email.trim()}`,
-        `WhatsApp: ${whatsapp}`,
-        ``,
-        `══════════════════════════════════════`,
-        `  DADOS PARA NOTA FISCAL`,
-        `══════════════════════════════════════`,
-        `Tipo: Pessoa ${tipoPessoa === "pj" ? "Jurídica" : "Física"}`,
-        `${nomeLabel}: ${nfName}`,
-        `${docLabel}: ${documento}`,
-        `Endereço: ${endereco}`,
-        ``,
-        `══════════════════════════════════════`,
-        `  PLANO SOLICITADO`,
-        `══════════════════════════════════════`,
-        `Plano: ${planName}`,
-        `Ciclo: ${planCycle}`,
-        `Valor: ${planPrice}`,
-        ``,
-        `---`,
-        `Nossa equipe entrará em contato via WhatsApp e e-mail`,
-        `antes de proceder com qualquer pagamento.`,
-        ``,
-        `Enviado automaticamente pela Landing Page SUP-IA`,
-      ].join("\n")
-    )
+    try {
+      // Envia e-mail via Resend (backend)
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: nome.trim(),
+          email: email.trim(),
+          whatsapp,
+          tipoPessoa,
+          razaoSocial: nfName,
+          documento,
+          endereco,
+          plano: planName,
+          ciclo: planCycle,
+          valor: planPrice,
+        }),
+      })
+    } catch {
+      // silent fail — prossegue para WhatsApp mesmo se e-mail falhar
+    }
 
-    window.open(
-      `mailto:adm@sup-ia.com?subject=${subject}&body=${body}`,
-      "_self"
+    // Redireciona para WhatsApp com resumo
+    const waText = encodeURIComponent(
+      `Olá! Me chamo ${nome.trim().split(" ")[0]} e acabei de solicitar o plano *${planName}* (${planCycle}) da SUP-IA. Aguardo o contato!`
     )
+    window.open(`https://wa.me/5531996750513?text=${waText}`, "_blank")
 
-    setTimeout(() => {
-      setEnviando(false)
-      setStep(3)
-    }, 600)
+    setEnviando(false)
+    setStep(3)
   }
 
   const planDisplay = `${planName} — ${planCycle}`
