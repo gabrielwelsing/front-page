@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Globe, FileText, Image as ImageIcon, ScanLine, ClipboardList, BookOpen, Play, X } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { Globe, FileText, Image as ImageIcon, ScanLine, ClipboardList, BookOpen, Play, X, Maximize2 } from "lucide-react"
 import { AnimateIn } from "@/components/animate-in"
 
 const modules = [
@@ -78,8 +78,78 @@ const modules = [
   }
 ]
 
+type Module = typeof modules[number]
+
+function VideoModal({ module, onClose }: { module: Module; onClose: () => void }) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose()
+    }
+    document.addEventListener("keydown", onKey)
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.removeEventListener("keydown", onKey)
+      document.body.style.overflow = ""
+    }
+  }, [onClose])
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-slate-700"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="bg-slate-900 px-5 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`w-8 h-8 rounded-lg ${module.color} flex items-center justify-center`}>
+              <module.icon className={`w-4 h-4 ${module.iconColor}`} />
+            </div>
+            <div>
+              <p className="text-white text-sm font-bold">{module.previewLabel}</p>
+              <p className="text-slate-400 text-[11px]">Demo em loop · sem áudio</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+        </div>
+
+        {/* Vídeo expandido */}
+        <div className="bg-black aspect-video">
+          <video
+            src={module.videoUrl}
+            className="w-full h-full object-contain"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function ModulesSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [expandedModule, setExpandedModule] = useState<Module | null>(null)
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleMouseEnter(index: number) {
+    if (hideTimer.current) clearTimeout(hideTimer.current)
+    setHoveredIndex(index)
+  }
+
+  function handleMouseLeave() {
+    hideTimer.current = setTimeout(() => setHoveredIndex(null), 600)
+  }
 
   return (
     <section id="modulos" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50/80">
@@ -98,30 +168,20 @@ export function ModulesSection() {
             <AnimateIn key={index} delay={index * 80}>
               <div
                 className="relative h-full"
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
               >
                 {/* Card principal */}
-                <div
-                  className={`bg-white rounded-2xl p-7 border ${module.borderColor} shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group relative overflow-hidden h-full`}
-                >
-                  {/* Tag */}
+                <div className={`bg-white rounded-2xl p-7 border ${module.borderColor} shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group relative overflow-hidden h-full`}>
                   <span className={`absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider ${module.iconColor} ${module.color} px-2 py-0.5 rounded-full`}>
                     {module.tag}
                   </span>
-
                   <div className="flex flex-col">
                     <div className={`w-14 h-14 ${module.color} rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition-transform`}>
                       <module.icon className={`w-7 h-7 ${module.iconColor}`} />
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 mb-3 leading-snug">
-                      {module.name}
-                    </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      {module.description}
-                    </p>
-
-                    {/* Hint de preview */}
+                    <h3 className="text-base font-bold text-slate-900 mb-3 leading-snug">{module.name}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{module.description}</p>
                     <div className={`mt-4 flex items-center gap-1.5 text-xs font-medium transition-opacity duration-200 ${hoveredIndex === index ? "opacity-0" : "opacity-60"} ${module.iconColor}`}>
                       <Play className="w-3 h-3 fill-current" />
                       <span>Passe o mouse para ver demo</span>
@@ -129,39 +189,49 @@ export function ModulesSection() {
                   </div>
                 </div>
 
-                {/* Preview de vídeo — aparece no hover */}
+                {/* Preview de vídeo — hover */}
                 <div
-                  className={`absolute -top-2 z-50 w-[420px] transition-all duration-300 pointer-events-none ${
+                  className={`absolute -top-2 z-50 w-[420px] transition-all duration-300 ${
                     index % 3 === 0 ? "left-2" :
                     index % 3 === 2 ? "right-2" :
                     "left-1/2 -translate-x-1/2"
                   } ${
                     hoveredIndex === index
-                      ? "opacity-100 translate-y-[calc(-100%-8px)] scale-100"
-                      : "opacity-0 translate-y-[calc(-100%+8px)] scale-95"
+                      ? "opacity-100 -translate-y-[calc(100%+8px)] scale-100 pointer-events-auto"
+                      : "opacity-0 -translate-y-[calc(100%-8px)] scale-95 pointer-events-none"
                   }`}
                 >
-                  {/* Seta apontando para baixo */}
-                  <div className="flex justify-center mb-0">
+                  {/* Seta */}
+                  <div className={`flex mb-0 ${index % 3 === 0 ? "justify-start pl-8" : index % 3 === 2 ? "justify-end pr-8" : "justify-center"}`}>
                     <div className="w-3 h-3 bg-slate-900 rotate-45 translate-y-1.5 rounded-sm" />
                   </div>
 
-                  {/* Caixa do preview */}
+                  {/* Caixa */}
                   <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/40 border border-slate-700/50">
-                    {/* Área do vídeo */}
-                    <div className={`relative w-full aspect-video bg-gradient-to-br ${module.previewColor} flex items-center justify-center overflow-hidden`}>
+                    {/* Vídeo */}
+                    <div className={`relative w-full bg-black flex items-center justify-center overflow-hidden`} style={{ height: "220px" }}>
                       {module.videoUrl ? (
-                        <video
-                          src={module.videoUrl}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                        />
+                        <>
+                          <video
+                            src={module.videoUrl}
+                            className="w-full h-full object-contain"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                          />
+                          {/* Botão expandir */}
+                          <button
+                            onClick={() => setExpandedModule(module)}
+                            className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 text-[11px] font-medium transition-all border border-white/10 hover:border-white/20"
+                          >
+                            <Maximize2 className="w-3 h-3" />
+                            Ampliar
+                          </button>
+                        </>
                       ) : (
                         <>
-                          {/* Simulação de interface do produto */}
+                          <div className={`absolute inset-0 bg-gradient-to-br ${module.previewColor} opacity-80`} />
                           <div className="absolute inset-0 opacity-20">
                             <div className="h-6 bg-white/30 mx-3 mt-3 rounded" />
                             <div className="flex gap-1.5 mx-3 mt-2">
@@ -169,8 +239,6 @@ export function ModulesSection() {
                               <div className="h-16 flex-1 bg-white/20 rounded" />
                               <div className="h-16 flex-1 bg-white/20 rounded" />
                             </div>
-                            <div className="h-4 bg-white/20 mx-3 mt-2 rounded w-2/3" />
-                            <div className="h-4 bg-white/20 mx-3 mt-1.5 rounded w-1/2" />
                           </div>
                           <div className="relative w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 flex items-center justify-center shadow-lg">
                             <Play className="w-5 h-5 text-white fill-white ml-0.5" />
@@ -182,11 +250,11 @@ export function ModulesSection() {
                       )}
                     </div>
 
-                    {/* Rodapé da caixa */}
+                    {/* Rodapé */}
                     <div className="px-4 py-3 flex items-center justify-between">
                       <div>
                         <p className="text-white text-xs font-bold">{module.previewLabel}</p>
-                        <p className="text-slate-400 text-[11px] mt-0.5">Demo • ~30 segundos</p>
+                        <p className="text-slate-400 text-[11px] mt-0.5">Demo · clique em ampliar para tela cheia</p>
                       </div>
                       <div className={`w-7 h-7 rounded-lg ${module.color} flex items-center justify-center`}>
                         <module.icon className={`w-4 h-4 ${module.iconColor}`} />
@@ -199,13 +267,17 @@ export function ModulesSection() {
           ))}
         </div>
 
-        {/* Nota de preço */}
         <div className="text-center mt-10">
           <p className="text-sm text-slate-500">
             Módulos de automação inclusos em qualquer plano · Gestão de NS disponível como add-on no Empresarial · <a href="#pricing" className="text-blue-600 font-medium hover:underline">Ver preços →</a>
           </p>
         </div>
       </div>
+
+      {/* Modal expandido */}
+      {expandedModule && (
+        <VideoModal module={expandedModule} onClose={() => setExpandedModule(null)} />
+      )}
     </section>
   )
 }
