@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { Pool } from "pg"
-
-const hubPool = new Pool({ connectionString: "postgresql://postgres:iIcGMwEPYIxyxNWYUBArJxPtOvuxkcNJ@caboose.proxy.rlwy.net:59909/railway" })
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,17 +11,6 @@ export async function POST(req: NextRequest) {
     const nomeNF = tipoPessoa === "pj" ? razaoSocial : nome
     const docLabel = tipoPessoa === "pj" ? "CNPJ" : "CPF"
     const nomeLabel = tipoPessoa === "pj" ? "Razão Social" : "Nome (NF)"
-
-    // Salva no banco
-    try {
-      await hubPool.query(
-        `INSERT INTO leads_landing (nome, email, whatsapp, tipo_pessoa, razao_social, documento, endereco, plano, ciclo, valor)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-        [nome, email, whatsapp, tipoPessoa, nomeNF, documento, endereco, plano, ciclo, valor]
-      )
-    } catch (dbErr) {
-      console.error("DB error:", dbErr)
-    }
 
     // E-mail via Resend — silent fail
     try {
