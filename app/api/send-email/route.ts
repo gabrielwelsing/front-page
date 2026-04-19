@@ -75,6 +75,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Falha ao enviar e-mail" }, { status: 500 })
     }
 
+    // CallMeBot WhatsApp notification
+    try {
+      const waMsg = encodeURIComponent(
+        `🔔 *Cliente acessou o site.*\nInformações abaixo...\n\n` +
+        `👤 *Nome:* ${nome}\n` +
+        `📧 *E-mail:* ${email}\n` +
+        `📱 *WhatsApp:* ${whatsapp}\n\n` +
+        `📋 *Plano:* ${plano}\n` +
+        `🔁 *Ciclo:* ${ciclo}\n` +
+        `💰 *Valor:* ${valor}\n\n` +
+        `🧾 *Tipo:* Pessoa ${tipoPessoa === "pj" ? "Jurídica" : "Física"}\n` +
+        `🏢 *${tipoPessoa === "pj" ? "Razão Social" : "Nome NF"}:* ${nomeNF}\n` +
+        `🪪 *${docLabel}:* ${documento}\n` +
+        `📍 *Endereço:* ${endereco}`
+      )
+      await fetch(
+        `https://api.callmebot.com/whatsapp.php?phone=553196750513&text=${waMsg}&apikey=4260680`
+      )
+    } catch {
+      // silent fail — não bloqueia o fluxo
+    }
+
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error("send-email error:", err)
